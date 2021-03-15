@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import adminPenal from '@/views/AdminPanel'
+import adminPanelInd from '@/views/admin-panal/index'
+import servesCreateForm from "@/views/admin-panal/serviceCreateForm";
 
 Vue.use(VueRouter)
 
@@ -12,17 +14,14 @@ const routes = [
     component: Home
   },
   {
-    path: '/about',
-    name: 'About',
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  },
-  {
     path: '/admin',
     name: 'AdminPanel',
     component: adminPenal
+  },
+  {
+    path: '/admin-panel',
+    name: 'index',
+    component: adminPanelInd
   }
 ]
 
