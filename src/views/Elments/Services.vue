@@ -7,6 +7,7 @@
           <li class='services__list-item col-12 col-lg-4 ml-3' v-for="(el, id) in item.categories" v-bind:key="id">
             <div class='service-card overflow-hidden'>
               <p class='service-card__text'>{{el.title}}</p>
+
               <div  class='service-card__description'>
                 {{el.desc}}
               </div>
