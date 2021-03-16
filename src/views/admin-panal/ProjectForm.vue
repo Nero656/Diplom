@@ -19,7 +19,6 @@
         <b-form-file disabled
             placeholder="Choose a file or drop it here..."
             drop-placeholder="Drop file here..."
-            v-model = 'file'
         ></b-form-file>
       </div>
 
@@ -67,6 +66,19 @@
             rows="3"
             max-rows="6"
         ></b-form-textarea>
+      </div>
+
+      <div class="form-group" v-show="newProject">
+        <label>Preview</label>
+        <br>
+        <Product
+            :title="newProject"
+            :photo_url="photo_url"
+            :color="color"
+            :width="width"
+            :tags="tags"
+            :desc="desc"
+        />
       </div>
 
       <b-button variant="primary" @click.prevent="createProject">
@@ -84,6 +96,7 @@
               v-for="(item, id) in selectService"
               v-bind:key="id"
               :value="item.id"
+              @click="select(id)"
           >
             {{item.title}}
           </b-form-select-option>
@@ -92,7 +105,7 @@
 
       <div class="form-group">
         <label>New project</label>
-        <b-input type="text" v-model="newProject" placeholder="Title"/>
+        <b-input type="text" v-model="preview[0].title" placeholder="Title"/>
       </div>
 
       <div class="form-group">
@@ -100,21 +113,21 @@
         <b-form-file disabled
                      placeholder="Choose a file or drop it here..."
                      drop-placeholder="Drop file here..."
-                     v-model = 'file'
         ></b-form-file>
       </div>
 
+
       <div class="form-group">
         <label>Image URL</label>
-        <b-input type="text" v-model="photo_url" placeholder="URL"/>
+        <b-input type="text" v-model="preview[0].photo_url" placeholder="URL"/>
       </div>
 
-      <!--            @change="fileUpload"-->
+      <!--            @change="fileUpload" -->
       <div class="form-group">
         <label for="tags-separators">Tags</label>
         <b-form-tags
             input-id="tags-separators"
-            v-model="tags"
+            v-model="preview[0].tags"
             tag-pills
             tag-variant="primary"
             separator=" ,;"
@@ -127,7 +140,7 @@
         <label for="sb-step">Width</label>
         <b-form-spinbutton
             id="sb-step"
-            v-model="width"
+            v-model="preview[0].width"
             min="1"
             max="12"
             step="1"
@@ -136,19 +149,33 @@
 
       <div class="form-group">
         <label>Color</label>
-        <b-input type="color" v-model="color"/>
+        <b-input type="color" v-model="preview[0].color"/>
       </div>
 
       <div class="form-group">
         <label>Description</label>
         <b-form-textarea
             id="textarea"
-            v-model="desc"
+            v-model="preview[0].desc"
             placeholder="Enter something..."
             rows="3"
             max-rows="6"
         ></b-form-textarea>
       </div>
+
+      <div class="form-group" v-show="preview[0].title">
+        <label>Preview</label>
+        <br>
+        <Product
+            :title="preview[0].title"
+            :photo_url="preview[0].photo_url"
+            :color="preview[0].color"
+            :width="preview[0].width"
+            :tags="preview[0].tags"
+            :desc="preview[0].desc"
+        />
+      </div>
+
 
       <b-button variant="primary" @click.prevent="updateProject">
         update
@@ -165,11 +192,27 @@
               v-for="(item, id) in selectService"
               v-bind:key="id"
               :value="item.id"
+              @click="select(id)"
           >
             {{item.title}}
           </b-form-select-option>
         </b-form-select>
       </div>
+
+      <div class="form-group" v-show="preview[0].title">
+        <label>Preview</label>
+        <br>
+        <Product
+            :title="preview[0].title"
+            :photo_url="preview[0].photo_url"
+            :color="preview[0].color"
+            :width="preview[0].width"
+            :tags="preview[0].tags"
+            :desc="preview[0].desc"
+        />
+      </div>
+
+
       <b-button variant="danger" @click.prevent="deleteProject">
         Delete
         <b-spinner small v-show="load"></b-spinner>
@@ -182,8 +225,10 @@
 <script>
 import axios from "axios";
 import {server} from "@/Helper";
+import Product from "@/components/Product";
 export default {
   name: "ProjectForm",
+  components: {Product},
   data:()=>({
     newProject: '',
     photo_url: '',
@@ -195,6 +240,16 @@ export default {
     load: false,
     tags: [],
     tagsSTR: '',
+    preview: [
+      {
+        title: '',
+        photo_url: '',
+        tags: [],
+        width:0,
+        desc:'',
+        color:'',
+      }
+    ],
     navBut: [
       {id: 0, name: 'create', state: true},
       {id: 1, name: 'update', state: false},
@@ -216,11 +271,12 @@ export default {
       }
       this.navBut[id].state = !this.navBut[id].state
     },
-
-    // fileUpload(event) {
-    //   this.photo_url = event.target.files[0];
-    //   this.picture_create = URL.createObjectURL(this.photo_url);
-    // },
+    /*
+    todo
+     fileUpload(event) {
+      this.photo_url = event.target.files[0];
+       this.picture_create = URL.createObjectURL(this.photo_url);
+    },*/
 
     createProject(){
       this.load = true;
@@ -231,7 +287,7 @@ export default {
           this.tagsSTR += ',';
         }
       }
-
+      // todo
       // let fr = new FormData();
       //
       // fr.append('title', this.newProject);
@@ -251,6 +307,9 @@ export default {
           color: this.color
         })
       .then(res => {
+        axios.
+        get(`${server.baseURL}/projects`)
+            .then(res => {this.selectService = res.data})
         this.toast(
             'b-toaster-top-center',
             'success',
@@ -270,33 +329,26 @@ export default {
 
     updateProject(){
       this.load = true;
-
-      for (let i = 0; i < this.tags.length; i++){
-        this.tagsSTR += this.tags[i];
-        if (i < this.tags.length-1){
+      for (let i = 0; i < this.preview[0].tags.length; i++){
+        this.tagsSTR += this.preview[0].tags[i];
+        if (i < this.preview[0].tags.length-1){
           this.tagsSTR += ',';
         }
       }
 
-      // let fr = new FormData();
-      //
-      // fr.append('title', this.newProject);
-      // fr.append('photo_url', this.photo_url);
-      // fr.append('tags', this.tagsSTR);
-      // fr.append('width', this.width);
-      // fr.append('desc', this.desc);
-      // fr.append('color', this.color);
-
       axios
           .put(`${server.baseURL}/projects/`+this.selected, {
-            title: this.newProject,
-            photo_url: this.photo_url,
+            title: this.preview[0].title,
+            photo_url: this.preview[0].photo_url,
             tags: this.tagsSTR,
-            width: this.width,
-            desc: this.desc,
-            color: this.color
+            width: this.preview[0].width,
+            desc: this.preview[0].desc,
+            color: this.preview[0].color
           })
           .then(res => {
+            axios.
+            get(`${server.baseURL}/projects`)
+                .then(res => {this.selectService = res.data})
             this.toast(
                 'b-toaster-top-center',
                 'success',
@@ -312,6 +364,7 @@ export default {
                 error.response.data.message
             );
           })
+      this.tagsSTR = ''
     },
 
     deleteProject(){
@@ -320,12 +373,16 @@ export default {
           .delete(`${server.baseURL}/projects/`+this.selected)
           .then(
               res => {
-                this.load = false;
+                axios.
+                get(`${server.baseURL}/projects`)
+                    .then(res => {this.selectService = res.data})
+
                 this.toast(
                     'b-toaster-top-center',
                     'success',
                     'You delete new project'
                 );
+                this.load = false;
               }
           )
           .catch(error => {
@@ -340,7 +397,14 @@ export default {
       this.newCategory = '';
     },
 
-
+    select(id){
+      this.preview[0].title = this.selectService[id].title
+      this.preview[0].photo_url = this.selectService[id].photo_url
+      this.preview[0].tags = this.selectService[id].tags.split(',')
+      this.preview[0].width = this.selectService[id].width
+      this.preview[0].desc = this.selectService[id].desc
+      this.preview[0].color = this.selectService[id].color
+    },
 
     toast(toaster, variant, message) {
       this.counter++

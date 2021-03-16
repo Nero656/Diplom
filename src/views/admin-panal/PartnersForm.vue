@@ -31,16 +31,28 @@
               v-for="(item, id) in selectPartners"
               v-bind:key="id"
               :value="item.id"
+              @click="select(id)"
           >
-            {{item.title}}
+            {{item.id}}
           </b-form-select-option>
         </b-form-select>
+      </div>
+
+      <div class="form-group"  v-show="preview">
+        <label>Preview </label>
+        <br>
+        <b-img
+            height="150px"
+            class="partners__item"
+            :src="preview"
+        />
       </div>
 
       <div class="form-group">
         <label>Image URL</label>
         <b-input type="text" v-model="img" placeholder="URL"/>
       </div>
+
 
       <b-button variant="primary" @click.prevent="updateStack">
         Create
@@ -57,10 +69,21 @@
               v-for="(item, id) in selectPartners"
               v-bind:key="id"
               :value="item.id"
+              @click="select(id)"
           >
-            {{item.title}}
+            {{item.id}}
           </b-form-select-option>
         </b-form-select>
+
+      </div>
+      <div class="form-group"  v-show="preview">
+        <label>Preview </label>
+        <br>
+        <b-img
+            height="150px"
+            class="partners__item"
+            :src="preview"
+        />
       </div>
       <b-button variant="danger" @click.prevent="deleteStack">
         Delete
@@ -80,6 +103,7 @@ export default {
   data:()=>({
     selected: 0,
     img: '',
+    preview: '',
     selectPartners: [],
     load: false,
     navBut: [
@@ -101,7 +125,8 @@ export default {
           this.navBut[i].state = false;
         }
       }
-      this.navBut[id].state = !this.navBut[id].state
+      this.navBut[id].state = !this.navBut[id].state;
+      this.selectPartner = ''
     },
 
 
@@ -139,17 +164,20 @@ export default {
           })
           .then(
               res => {
+                axios.
+                  get(`${server.baseURL}/partners`)
+                    .then(res => {this.selectPartners = res.data})
                 this.toast(
                     'b-toaster-top-center',
                     'success',
                     'You update new serves'
                 );
+                this.selectPartner = this.img;
                 this.img = '';
                 this.load = false;
               }
           )
           .catch(error => {
-
                 this.toast(
                     'b-toaster-top-center',
                     'danger',
@@ -166,12 +194,15 @@ export default {
           .delete(`${server.baseURL}/partners/`+this.selected)
           .then(
               res => {
-                this.load = false;
+                axios.
+                get(`${server.baseURL}/partners`)
+                    .then(res => {this.selectPartners = res.data})
                 this.toast(
                     'b-toaster-top-center',
                     'success',
                     'You delete new serves'
                 );
+                this.load = false;
               }
           )
           .catch(error => {
@@ -185,6 +216,9 @@ export default {
           )
     },
 
+    select(id){
+      this.preview = this.selectPartners[id].photo_url;
+    },
 
     toast(toaster, variant, message) {
       this.counter++

@@ -16,6 +16,13 @@
         backdrop-variant="dark"
         backdrop
     >
+      <template #footer="{ hide }">
+        <div class="d-flex align-items-center px-3 py-2">
+          <router-link to="/">
+            Return to site
+          </router-link>
+        </div>
+      </template>
       <b-list-group style="text-align: left; border-radius:0">
         <div v-for="(item, id) in items" v-bind:key="id">
           <b-list-group-item button v-if="item.state === true" active>

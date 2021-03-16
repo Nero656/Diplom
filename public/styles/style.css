@@ -142,6 +142,8 @@ body {
   float: left;
   background-color: transparent;
   border: none;
+  margin-left: 50%;
+  margin-right: 50%;
 }
 
 .info__arrow-image {
