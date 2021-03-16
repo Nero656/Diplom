@@ -1,9 +1,9 @@
 <template>
   <b-navbar toggleable="lg" type="light" class="container">
 
-      <router-link  to="/" class="logo align-items-center row row-cols-2 col-11 col-md-5 col-lg-3">
+      <router-link  to="/" class="logo align-items-center row row-cols-2 col-11 col-md-5 col-lg-4">
           <img class='logo__image col-4 col-md-5 col-lg-3' src="img/Subtract.svg" alt="iLink logo">
-          <div class='logo__text '>
+          <div class='logo__text' style="text-align: left">
             iLink <br/>
             Digital agency
           </div>
@@ -13,12 +13,11 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#" class="nav-menu__item">Services</b-nav-item>
-        <b-nav-item href="#" class="nav-menu__item">Stack</b-nav-item>
-        <b-nav-item href="#" class="nav-menu__item">Projects</b-nav-item>
-        <b-nav-item href="#" class="nav-menu__item">Partners</b-nav-item>
-        <b-nav-item href="#" class="nav-menu__item">Careers</b-nav-item>
-      </b-navbar-nav>
+        <b-nav-item href="#Services" class="nav-menu__item">Services</b-nav-item>
+        <b-nav-item href="#Stack" class="nav-menu__item">Stack</b-nav-item>
+        <b-nav-item href="#Projects" class="nav-menu__item">Projects</b-nav-item>
+        <b-nav-item href="#Partners" class="nav-menu__item">Partners</b-nav-item>
+       </b-navbar-nav>
 
       <!-- Right aligned nav items -->
 
@@ -27,11 +26,8 @@
             Contact us
           </button>
       </div>
-
     </b-collapse>
-
     <ContactUs idModal="modal-center-header"/>
-
   </b-navbar>
 </template>
 

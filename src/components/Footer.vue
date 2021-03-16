@@ -1,10 +1,10 @@
 <template>
-  <footer class="footer__el">
+  <footer class="footer__el mt-5">
     <div class='container d-flex justify-content-between'>
       <div class='left__section d-flex flex-column'>
         <a href="#" class="logo d-flex align-items-center">
           <img class='logo__image' src="img/Subtract.svg" alt="iLink logo">
-          <div class='logo__text_footer'>
+          <div class='logo__text_footer' style="text-align: left">
             iLink<br />
             Digital agency
           </div>
