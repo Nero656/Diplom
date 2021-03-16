@@ -1,12 +1,8 @@
 <template>
   <div id="app">
-   <Header/>
-
     <div id="cont">
       <router-view/>
     </div>
-
-    <Footer/>
   </div>
 </template>
 
@@ -30,9 +26,4 @@
 }
 </style>
 <script>
-import Footer from "@/components/Footer";
-import Header from "@/components/Header";
-export default {
-  components: {Header, Footer}
-}
 </script>

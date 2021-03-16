@@ -168,6 +168,7 @@ export default {
       this.$bvToast.toast(`We will contact you shortly`, {
         title: `Message sent`,
         toaster: toaster,
+        variant: 'success',
         solid: true,
         appendToast: append
       })

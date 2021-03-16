@@ -1,5 +1,5 @@
 <template>
-    <section class='container services main__services mt-3' >
+    <section class='container services main__services' id="Services">
       <h1 class='services__title'>Services</h1>
       <LoadingCom v-if="LoadingCom === true"/>
       <div v-for="(item, id) in serviceArr" v-bind:key="id" class='services__container position-relative' v-else>
@@ -45,7 +45,7 @@ export default {
 
 <style scoped>
   .services{
-    margin-top: 2%;
+    margin-top: 52%;
     text-align: left;
   }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <section class='info main__info team'>
-    <div class='container p-0 d-flex'>
+    <div class='container p-0'>
       <div class='col-10'>
         <h1 class='info__header'>
           Software Development & Dedicated Teams
@@ -49,7 +49,7 @@ export default {
   components: {ContactUs},
   methods:{
     Scroll(){
-      window.scroll(0, 920);
+      window.scroll(0, 820);
     }
   }
 }

@@ -12,7 +12,6 @@ import 'vue-tel-input/dist/vue-tel-input.css'
 Vue.component('input-mask', InputMask)
 Vue.use(BootstrapVue)
 Vue.use(BootstrapVueIcons)
-Vue.config.productionTip = false
 
 new Vue({
   router,
