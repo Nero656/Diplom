@@ -13,10 +13,10 @@
 
     <b-collapse id="nav-collapse" is-nav>
       <b-navbar-nav>
-        <b-nav-item href="#Services" class="nav-menu__item">Services</b-nav-item>
-        <b-nav-item href="#Stack" class="nav-menu__item">Stack</b-nav-item>
-        <b-nav-item href="#Projects" class="nav-menu__item">Projects</b-nav-item>
-        <b-nav-item href="#Partners" class="nav-menu__item">Partners</b-nav-item>
+        <b-nav-item href="#Services" class="nav-menu__item col-2">Services</b-nav-item>
+        <b-nav-item href="#Stack" class="nav-menu__item col-2">Stack</b-nav-item>
+        <b-nav-item href="#Projects" class="nav-menu__item col-2">Projects</b-nav-item>
+        <b-nav-item href="#Partners" class="nav-menu__item col-2">Partners</b-nav-item>
        </b-navbar-nav>
 
       <!-- Right aligned nav items -->

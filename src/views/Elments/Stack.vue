@@ -9,7 +9,7 @@
     </p>
     <LoadingCom  v-if="LoadingCom === true"/>
     <div class='stack__list d-flex flex-wrap'>
-      <div class="stack__list-item col-2" v-for="(item, id) in stackArr" v-bind:key="id">
+      <div class="stack__list-item col-6 col-sm-4 col-lg-2" v-for="(item, id) in stackArr" v-bind:key="id">
         <b-img  class='stack__icon' :src = 'item.photo_url'  :alt="item.item"></b-img>
         <h2 class='stack__name'>{{item.title}}</h2>
       </div>
