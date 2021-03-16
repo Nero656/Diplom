@@ -8,6 +8,14 @@
       the best results.
     </p>
 
+    <LoadingCom  v-if="LoadingCom === true"/>
+    <div class='stack__list d-flex flex-wrap'>
+      <div class="stack__list-item mt-3 col-6 col-sm-3 col-lg-2" v-for="(item, id) in stackArr" v-bind:key="id">
+        <b-img  class='stack__icon' :src = 'item.photo_url' :alt="item.item"></b-img>
+        <h2 class='stack__name'>{{item.title}}</h2>
+      </div>
+    </div>
+
     <ul class='stack__list d-flex flex-wrap'>
       <li class='stack__list-item col-2'>
         <div class='stack__icon'>
