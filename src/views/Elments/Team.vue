@@ -48,7 +48,7 @@ export default {
   components: {ContactUs},
   methods:{
     Scroll(){
-      window.scroll(0, 820);
+      window.scroll(0, 980);
     }
   }
 }
