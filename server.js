@@ -9,3 +9,5 @@ app.use('/', serveStatic(path.join(__dirname, '/dist')))
 const port = process.env.PORT || 5555
 
 app.listen(port)
+
+console.log('Listening on port: ' + port)
