@@ -1,3 +1,3 @@
 export const server = {
-    baseURL: 'http://localhost:5050'
+    baseURL: 'http://8b1e7732d737.ngrok.io/'
 }
