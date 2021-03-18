@@ -1,0 +1,44 @@
+.bg-main-color {
+    background: linear-gradient(rgb(80, 87, 255), rgb(107, 211, 243));
+}
+
+.all-height {
+    height: 100vh;
+}
+
+.main-section {
+    display: flex;
+    flex-direction: row;
+}
+
+#sidebarMenu {
+    width: 15%;
+    box-shadow: 2px 0 2px grey;
+}
+
+.grid-container {
+    width: 85%;
+}
+
+.grid {
+    height: 100vh;
+    padding: 75px 50px 50px 50px;
+}
+
+#sidebarMenu a {
+    color: white !important;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.interface {
+    padding-top: 75px;
+}
+
+.feather {
+    margin-right: 1rem !important;
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) {
+    background: rgb(232, 244, 246);
+}
