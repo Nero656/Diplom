@@ -50,7 +50,7 @@
 
       <div class="form-group">
         <label>Image URL</label>
-        <b-input type="text" v-model="img" placeholder="URL"/>
+        <b-input type="text" v-model="preview" placeholder="URL"/>
       </div>
 
 
@@ -160,7 +160,7 @@ export default {
       this.load = true;
       axios
           .put(`${server.baseURL}/partners/`+this.selected, {
-            photo_url: this.img
+            photo_url: this.preview
           })
           .then(
               res => {
