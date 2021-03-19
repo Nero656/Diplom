@@ -1,3 +1,3 @@
 export const server = {
-    baseURL: 'https://backendilink.herokuapp.com/'
+    baseURL: 'https://backendilink.herokuapp.com'
 }
