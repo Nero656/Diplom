@@ -161,11 +161,6 @@ export default {
                 width: this.preview[0].width,
                 desc: this.preview[0].desc,
                 color: this.preview[0].color
-              }, {
-                headers: {
-                  'Content-Type': 'multipart/form-data',
-                  'Accept': 'application/json'
-                }
               })
           .then(res => {
             axios.get(`${server.baseURL}/projects`)

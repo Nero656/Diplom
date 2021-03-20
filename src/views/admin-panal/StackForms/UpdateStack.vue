@@ -9,40 +9,40 @@
             :value="item.id"
             @click="select(id)"
         >
-          {{item.title}}
+          {{ item.title }}
         </b-form-select-option>
       </b-form-select>
     </div>
 
-    <div class="form-group"  v-show="preview.img">
+    <div class="form-group" v-show="preview[0].img">
       <label>Preview </label>
       <br>
       <div class='stack__list d-flex flex-wrap'>
         <div class="stack__list-item col-2">
-          <b-img  class='stack__icon' :src = 'preview.img'  :alt="img"></b-img>
-          <h2 class='stack__name'>{{preview.title}}</h2>
+          <b-img class='stack__icon' :src='preview[0].img' :alt="preview[0].img"></b-img>
+          <h2 class='stack__name'>{{ preview[0].title }}</h2>
         </div>
       </div>
     </div>
 
     <div class="form-group">
       <label>New Stack</label>
-      <b-input type="text" v-model="stack" placeholder="Title"/>
+      <b-input type="text" v-model="preview[0].title" placeholder="Title"/>
     </div>
 
     <div class="form-group">
-      <label>Image</label>
-      <b-form-file
-          placeholder="Choose a file or drop it here..."
-          drop-placeholder="Drop file here..."
-          @change="fileUpload"
-      ></b-form-file>
+      <label>Image URL</label>
+      <b-input type="text" v-model="preview[0].img" placeholder="URL"/>
     </div>
 
-<!--    <div class="form-group">-->
-<!--      <label>Image URL</label>-->
-<!--      <b-input type="text" v-model="img" placeholder="URL"/>-->
-<!--    </div>-->
+    <!--    <div class="form-group">-->
+    <!--      <label>Image</label>-->
+    <!--      <b-form-file-->
+    <!--          placeholder="Choose a file or drop it here..."-->
+    <!--          drop-placeholder="Drop file here..."-->
+    <!--          @change="fileUpload"-->
+    <!--      ></b-form-file>-->
+    <!--    </div>-->
 
     <b-button variant="primary" @click.prevent="updateStack">
       Create
@@ -58,44 +58,48 @@ import {server} from "@/Helper";
 export default {
   name: "UpdateStack",
   data: () => ({
-    preview: {},
-    stack: '',
-    photo_url: '',
-    img: '',
+    preview: [
+      {
+        title: '',
+        img: '',
+      }
+    ],
     selected: 0,
     selectStack: [],
     load: false,
   }),
   mounted() {
-    axios.
-    get(`${server.baseURL}/stack`)
-        .then(res => {this.selectStack = res.data})
+    axios.get(`${server.baseURL}/stack`)
+        .then(res => {
+          this.selectStack = res.data
+        })
   },
-  methods:{
-    fileUpload(event) {
-      this.photo_url = event.target.files[0];
-      this.preview.img = URL.createObjectURL(this.photo_url);
-    },
+  methods: {
+    // fileUpload(event) {
+    //   this.photo_url = event.target.files[0];
+    //   this.preview.img = URL.createObjectURL(this.photo_url);
+    // },
 
-    updateStack(){
+    updateStack() {
       this.load = true;
 
-      let fr = new FormData();
-
-      fr.append("title", this.stack);
-      fr.append("photo_url", this.photo_url);
+      // let fr = new FormData();
+      //
+      // fr.append("title", this.stack);
+      // fr.append("photo_url", this.photo_url);
 
       axios
-          .put(`${server.baseURL}/Stack/`+this.selected,  fr, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Accept': 'application/json'
-            }})
+          .put(`${server.baseURL}/Stack/` + this.selected, {
+            title: this.preview[0].title,
+            photo_url: this.preview[0].img
+          })
           .then(
               res => {
                 axios
                     .get(`${server.baseURL}/stack`)
-                    .then(res => {this.selectStack = res.data});
+                    .then(res => {
+                      this.selectStack = res.data
+                    });
                 this.toast(
                     'Success',
                     'b-toaster-top-center',
@@ -119,9 +123,9 @@ export default {
           )
     },
 
-    select(id){
-      this.preview.img = this.selectStack[id].photo_url;
-      this.preview.title = this.selectStack[id].title;
+    select(id) {
+      this.preview[0].img = this.selectStack[id].photo_url;
+      this.preview[0].title = this.selectStack[id].title;
     },
 
     toast(title, toaster, variant, message) {

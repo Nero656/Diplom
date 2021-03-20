@@ -24,19 +24,19 @@
       />
     </div>
 
-    <div class="form-group">
-      <label>Image</label>
-      <b-form-file
-          placeholder="Choose a file or drop it here..."
-          drop-placeholder="Drop file here..."
-          @change="fileUpload"
-      ></b-form-file>
-    </div>
-
 <!--    <div class="form-group">-->
-<!--      <label>Image URL</label>-->
-<!--      <b-input type="text" v-model="preview" placeholder="URL"/>-->
+<!--      <label>Image</label>-->
+<!--      <b-form-file-->
+<!--          placeholder="Choose a file or drop it here..."-->
+<!--          drop-placeholder="Drop file here..."-->
+<!--          @change="fileUpload"-->
+<!--      ></b-form-file>-->
 <!--    </div>-->
+
+    <div class="form-group">
+      <label>Image URL</label>
+      <b-input type="text" v-model="preview" placeholder="URL"/>
+    </div>
 
 
     <b-button variant="primary" @click.prevent="updatePartner">
@@ -55,7 +55,6 @@ export default {
   name: "UpdatePartners",
   data:()=>({
     selected: 0,
-    img: '',
     preview: '',
     selectPartners: [],
     load: false,
@@ -71,24 +70,22 @@ export default {
         .then(res => {this.selectPartners = res.data})
   },
   methods:{
-    fileUpload(event) {
-      this.photo_url = event.target.files[0];
-      this.preview = URL.createObjectURL(this.photo_url);
-    },
+    // fileUpload(event) {
+    //   this.photo_url = event.target.files[0];
+    //   this.preview = URL.createObjectURL(this.photo_url);
+    // },
 
     updatePartner(){
       this.load = true;
 
-      let fr = new FormData();
-
-      fr.append("photo_url", this.photo_url);
+      // let fr = new FormData();
+      //
+      // fr.append("photo_url", this.photo_url);
 
       axios
-          .put(`${server.baseURL}/partners/`+this.selected, fr, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Accept': 'application/json'
-            }})
+          .put(`${server.baseURL}/partners/`+this.selected,{
+            photo_url: this.preview
+          } )
           .then(
               res => {
                 axios.
@@ -100,8 +97,8 @@ export default {
                     'success',
                     'You update new serves'
                 );
-                this.selectPartner = this.img;
-                this.img = '';
+                this.selectPartner = this.preview;
+                this.preview = '';
                 this.load = false;
               }
           )

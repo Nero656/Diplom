@@ -65,7 +65,7 @@ export default {
                     'Success',
                     'b-toaster-top-center',
                     'success',
-                    'You delete new serves'
+                    'You delete partners'
                 );
                 this.load = false;
               }
@@ -76,7 +76,7 @@ export default {
                     'ERROR',
                     'b-toaster-top-center',
                     'danger',
-                    'You not delete new serves'
+                    'You not delete partners'
                 );
               }
           )

@@ -66,7 +66,7 @@
       <br>
       <Product
           :title="newProject"
-          :photo_url="picture_create"
+          :photo_url="photo_url"
           :color="color"
           :width="width"
           :tags="tags"
@@ -91,7 +91,7 @@ name: "CreateProject",
   components: {Product},
   data: ()=>({
     newProject: '',
-    photo_url: null,
+    photo_url: '',
     picture_create: '',
     color: '',
     width: 1,
@@ -129,22 +129,14 @@ name: "CreateProject",
       // console.log(fr, fr.get('photo_url'))
       // {
 
-
-
-
       axios
           .post(`${server.baseURL}/projects`,  {
-            title: this.title,
+            title: this.newProject,
             photo_url: this.photo_url,
             tags: this.tagsSTR,
             width: this.width,
             desc: this.desc,
             color: this.color
-          }, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Accept': 'application/json'
-            }
           })
           .then(res => {
             axios.get(`${server.baseURL}/projects`)
@@ -158,6 +150,7 @@ name: "CreateProject",
                 'You create new project'
             );
             this.load = false;
+            this.tagsSTR = '';
           })
           .catch(error => {
             this.load = false;
@@ -167,6 +160,7 @@ name: "CreateProject",
                 'danger',
                 error.response.data.message
             );
+            this.tagsSTR = '';
           })
     },
     toast(title, toaster, variant, message) {
