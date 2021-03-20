@@ -1,5 +1,5 @@
 <template>
-  <form class="container text-left mt-5 mb-4" >
+  <form class="container text-left mt-5 mb-4">
     <div class="form-group">
       <label>Edit service</label>
       <b-form-select v-model="selected">
@@ -19,19 +19,19 @@
       <b-input type="text" v-model="preview[0].title" placeholder="Title"/>
     </div>
 
-    <div class="form-group">
-      <label>Image</label>
-      <b-form-file
-          placeholder="Choose a file or drop it here..."
-          drop-placeholder="Drop file here..."
-          @change="fileUploadUpdate"
-      ></b-form-file>
-    </div>
+    <!--    <div class="form-group">-->
+    <!--      <label>Image</label>-->
+    <!--      <b-form-file-->
+    <!--          placeholder="Choose a file or drop it here..."-->
+    <!--          drop-placeholder="Drop file here..."-->
+    <!--          @change="fileUploadUpdate"-->
+    <!--      ></b-form-file>-->
+    <!--    </div>-->
 
-    <!--      <div class="form-group">-->
-    <!--        <label>Image URL</label>-->
-    <!--        <b-input type="text" placeholder="URL" @change="fileUpload"/>-->
-    <!--      </div>-->
+    <div class="form-group">
+      <label>Image URL</label>
+      <b-input type="text" placeholder="URL"/>
+    </div>
 
     <!--            @change="fileUpload" -->
     <div class="form-group">
@@ -79,7 +79,7 @@
       <br>
       <Product
           :title="preview[0].title"
-          :photo_url="picture_create"
+          :photo_url="preview[0].photo_url"
           :color="preview[0].color"
           :width="preview[0].width"
           :tags="preview[0].tags"
@@ -103,7 +103,7 @@ import Product from "@/components/Product";
 export default {
   name: "UpdateProject",
   components: {Product},
-  data: ()=>({
+  data: () => ({
     selected: 0,
     load: false,
     tags: [],
@@ -127,12 +127,12 @@ export default {
           this.selectService = res.data
         })
   },
-  methods:{
+  methods: {
 
-    fileUploadUpdate(event) {
-      this.photo_url[0] = event.target.files[0];
-      this.picture_create = URL.createObjectURL(this.photo_url);
-    },
+    // fileUploadUpdate(event) {
+    //   this.photo_url[0] = event.target.files[0];
+    //   this.picture_create = URL.createObjectURL(this.photo_url);
+    // },
 
     updateProject() {
       this.load = true;
@@ -143,32 +143,30 @@ export default {
         }
       }
 
-      let fr = new FormData();
+      // let fr = new FormData();
+      //
+      // fr.append("title", this.preview[0].newProject);
+      // fr.append("photo_url", this.preview[0].photo_url);
+      // fr.append("tags", this.preview[0].tagsSTR);
+      // fr.append("width", this.preview[0].width);
+      // fr.append("desc", this.preview[0].desc);
+      // fr.append("color", this.preview[0].color);
 
-      fr.append("title", this.preview[0].newProject);
-      fr.append("photo_url", this.preview[0].photo_url);
-      fr.append("tags", this.preview[0].tagsSTR);
-      fr.append("width", this.preview[0].width);
-      fr.append("desc", this.preview[0].desc);
-      fr.append("color", this.preview[0].color);
-
-
-      // {
-      //   title: this.preview[0].title,
-      //       photo_url: this.preview[0].photo_url,
-      //     tags: this.tagsSTR,
-      //     width: this.preview[0].width,
-      //     desc: this.preview[0].desc,
-      //     color: this.preview[0].color
-      // }
 
       axios
-          .put(`${server.baseURL}/projects/` + this.selected, fr, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-              'Accept': 'application/json'
-            }
-          })
+          .put(`${server.baseURL}/projects/` + this.selected, {
+                title: this.preview[0].title,
+                photo_url: this.preview[0].photo_url,
+                tags: this.tagsSTR,
+                width: this.preview[0].width,
+                desc: this.preview[0].desc,
+                color: this.preview[0].color
+              }, {
+                headers: {
+                  'Content-Type': 'multipart/form-data',
+                  'Accept': 'application/json'
+                }
+              })
           .then(res => {
             axios.get(`${server.baseURL}/projects`)
                 .then(res => {

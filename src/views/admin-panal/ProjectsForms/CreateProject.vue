@@ -5,20 +5,20 @@
       <b-input type="text" v-model="newProject" placeholder="Title"/>
     </div>
 
-    <div class="form-group">
-      <label>Image</label>
-      <b-form-file
-          placeholder="Choose a file or drop it here..."
-          drop-placeholder="Drop file here..."
-          @change="fileUpload"
-      ></b-form-file>
-    </div>
+<!--    <div class="form-group">-->
+<!--      <label>Image</label>-->
+<!--      <b-form-file-->
+<!--          placeholder="Choose a file or drop it here..."-->
+<!--          drop-placeholder="Drop file here..."-->
+<!--          @change="fileUpload"-->
+<!--      ></b-form-file>-->
+<!--    </div>-->
     <!--            -->
 
-    <!--      <div class="form-group">-->
-    <!--        <label>Image URL</label>-->
-    <!--        <b-input type="text" v-model="photo_url" placeholder="URL"/>-->
-    <!--      </div>-->
+    <div class="form-group">
+      <label>Image URL</label>
+      <b-input type="text" v-model="photo_url" placeholder="URL"/>
+    </div>
 
     <!--            -->
     <div class="form-group">
@@ -101,10 +101,10 @@ name: "CreateProject",
     tagsSTR: '',
   }),
   methods:{
-    fileUpload(event) {
-      this.photo_url = event.target.files[0];
-      this.picture_create = URL.createObjectURL(this.photo_url);
-    },
+    // fileUpload(event) {
+    //   this.photo_url = event.target.files[0];
+    //   this.picture_create = URL.createObjectURL(this.photo_url);
+    // },
 
     createProject() {
       this.load = true;
@@ -116,21 +116,31 @@ name: "CreateProject",
         }
       }
       // todo
-      let fr = new FormData();
-
-      fr.append("title", this.newProject);
-      fr.append("photo_url", this.photo_url);
-      fr.append("tags", this.tagsSTR);
-      fr.append("width", this.width);
-      fr.append("desc", this.desc);
-      fr.append("color", this.color);
+      // let fr = new FormData();
+      //
+      // fr.append("title", this.newProject);
+      // fr.append("photo_url", this.photo_url);
+      // fr.append("tags", this.tagsSTR);
+      // fr.append("width", this.width);
+      // fr.append("desc", this.desc);
+      // fr.append("color", this.color);
 
 
       // console.log(fr, fr.get('photo_url'))
       // {
 
+
+
+
       axios
-          .post(`${server.baseURL}/projects`, fr, {
+          .post(`${server.baseURL}/projects`,  {
+            title: this.title,
+            photo_url: this.photo_url,
+            tags: this.tagsSTR,
+            width: this.width,
+            desc: this.desc,
+            color: this.color
+          }, {
             headers: {
               'Content-Type': 'multipart/form-data',
               'Accept': 'application/json'
