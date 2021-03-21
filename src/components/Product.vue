@@ -1,5 +1,5 @@
 <template>
-  <div :class="'pr text-white pt-md-3 overflow-hidden col-lg-'+width"
+  <div :class="'pr text-white pt-md-3 overflow-hidden col-12 col-sm-5 col-lg-'+width"
        :style="'background-color:'+color">
     <div>
       <h2 class="display-5">{{title}}</h2>

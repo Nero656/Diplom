@@ -5,8 +5,7 @@
       <b-img
         v-else
         v-for="(item, id) in partnersArr" v-bind:key="id"
-        height="150px"
-        class="mt-2 ml-2 partners__item"
+        class="mt-2 ml-2 partners__item col-12 col-sm-4 col-lg-3"
         :src="item.photo_url"
       />
   </section>

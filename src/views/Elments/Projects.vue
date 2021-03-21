@@ -4,6 +4,7 @@
     <LoadingCom v-if="LoadingCom === true"/>
     <div class="projects__list container-fluid" v-else>
         <Product
+            class="mt-1"
             v-for="(item,id) in projectsArr" v-bind:key="id"
               :title="item.title"
               :photo_url="item.photo_url"

@@ -1,8 +1,9 @@
 <template>
   <div>
     <b-button
-        class="d-flex left fixed-top ml-2 mt-4 "
+        class="left fixed-top ml-2 mt-4"
         squared
+        size="md"
         variant="outline-primary"
         v-b-toggle.sidebar-backdrop
     >
