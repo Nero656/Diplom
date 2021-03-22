@@ -1,11 +1,11 @@
 <template>
-  <section class='partners container p-0 main__services' id="Partners">
+  <section class='partners container  main__services' id="Partners">
     <h1 class='partners__title'>Partners</h1>
       <LoadingCom  v-if="LoadingCom === true"/>
       <b-img
         v-else
         v-for="(item, id) in partnersArr" v-bind:key="id"
-        class="mt-2 ml-2 partners__item col-12 col-sm-4 col-lg-3"
+        class="ml partners__item col-12 col-sm-4 col-lg-4"
         :src="item.photo_url"
       />
   </section>
