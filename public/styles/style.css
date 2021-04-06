@@ -187,7 +187,7 @@ body {
 }
 
 .services__list-item {
-  margin-left: 10rem;
+  margin-left: 3rem;
 }
 
 .service-card {
@@ -292,10 +292,10 @@ body {
 .stack__list-item {
   height: 175px;
   transition: 0.3s;
+  margin-top: 50px;
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  margin-bottom: 20px;
 }
 .stack__list-item:hover .stack__name {
   color: #5057FF;
