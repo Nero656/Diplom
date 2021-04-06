@@ -4,7 +4,7 @@
       <LoadingCom v-if="LoadingCom === true"/>
       <div v-for="(item, id) in serviceArr" v-bind:key="id" class='services__container position-relative' v-else>
         <ul class='services__list col d-flex flex-wrap p-0'>
-          <li class='services__list-item col-12 col-lg-4 ml-3' v-for="(el, id) in item.categories" v-bind:key="id">
+          <li class='services__list-item col-12 col-lg-3 ml-3' v-for="(el, id) in item.categories" v-bind:key="id">
             <div class='service-card overflow-hidden'>
               <p class='service-card__text'>{{el.title}}</p>
 
