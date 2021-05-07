@@ -1,19 +1,17 @@
 <template>
-  <section class='partners container p-0 main__services' id="Partners">
+  <section class='partners container  main__services' id="Partners">
     <h1 class='partners__title'>Partners</h1>
       <LoadingCom  v-if="LoadingCom === true"/>
       <b-img
         v-else
         v-for="(item, id) in partnersArr" v-bind:key="id"
-        height="150px"
-        class="mt-2 ml-2 partners__item"
+        class="ml partners__item col-12 col-sm-4 col-lg-4"
         :src="item.photo_url"
       />
   </section>
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 import LoadingCom from "@/components/LoadingCom";
 
@@ -25,12 +23,16 @@ export default {
     partnersArr: []
   }),
   mounted() {
-    axios
-        .get(`${server.baseURL}/partners`)
-        .then(res => {
-          this.partnersArr = res.data;
-          this.LoadingCom = false
-        })
+    fetch(`${server.baseURL}/partners/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then(data =>{
+          this.partnersArr = data;
+          this.LoadingCom = false;
+        });
+      }
+    });
   }
 }
 </script>

@@ -9,7 +9,7 @@
     </p>
     <LoadingCom  v-if="LoadingCom === true"/>
     <div class='stack__list d-flex flex-wrap'>
-      <div class="stack__list-item col-6 col-sm-4 col-lg-2" v-for="(item, id) in stackArr" v-bind:key="id">
+      <div class="stack__list-item col-6 col-sm-3 col-lg-2" v-for="(item, id) in stackArr" v-bind:key="id">
         <b-img  class='stack__icon' :src = 'item.photo_url'  :alt="item.item"></b-img>
         <h2 class='stack__name'>{{item.title}}</h2>
       </div>
@@ -18,10 +18,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import { server } from "@/Helper";
 import LoadingCom from "@/components/LoadingCom";
-
 export default {
   name: "Stack",
   components: {LoadingCom},
@@ -30,11 +28,15 @@ export default {
     stackArr: []
   }),
   mounted() {
-    axios
-    .get(`${server.baseURL}/stack`)
-    .then(res => {
-      this.stackArr = res.data;
-      this.LoadingCom = false
+    fetch(`${server.baseURL}/stack/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then( function( data ){
+          this.stackArr = data;
+          this.LoadingCom = false;
+        }.bind(this));
+      }
     })
   }
 }

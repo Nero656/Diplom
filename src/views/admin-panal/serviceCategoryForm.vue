@@ -123,12 +123,27 @@ export default {
     ]
   }),
   mounted() {
-    axios.
-    get(`${server.baseURL}/services`)
-        .then(res => {this.selectService = res.data});
-    axios.
-    get(`${server.baseURL}/services-categories`)
-        .then(res => {this.selectCategory = res.data});
+    fetch(`${server.baseURL}/services/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then(data =>{
+          this.selectService = data;
+          this.LoadingCom = false;
+        });
+      }
+    });
+
+    fetch(`${server.baseURL}/services-categories/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then(data =>{
+          this.selectCategory = data;
+          this.LoadingCom = false;
+        });
+      }
+    });
   },
   methods:{
     checkedForm(id)
@@ -143,38 +158,49 @@ export default {
 
     createService(){
       this.load = true;
-      axios
-          .post(`${server.baseURL}/services-categories`, {
-            title: this.newCategory,
-            service: this.selectedCategory,
-            desc: this.desc
-          })
-          .then(
-              res => {
-                this.toast(
-                    'b-toaster-top-center',
-                    'success',
-                    'You create new serves'
-                );
-
-                axios.
-                get(`${server.baseURL}/services`)
-                    .then(res => {this.selectService = res.data});
-                axios.
-                get(`${server.baseURL}/services-categories`)
-                    .then(res => {this.selectCategory = res.data});
-                this.load = false;
-              }
-          )
-          .catch(error => {
-                this.load = false;
-                this.toast(
-                    'b-toaster-top-center',
-                    'danger',
-                    'You not create new serves'
-                );
-              }
-          )
+      fetch(`${server.baseURL}/services-categories`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: this.newCategory,
+          service: this.selectedCategory,
+          desc: this.desc
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          this.toast(
+              'b-toaster-top-center',
+              'success',
+              'You create new serves'
+          );
+          fetch(`${server.baseURL}/services/`).then(response =>{
+            response.json().then(data =>{
+              this.selectService = data;
+              this.LoadingCom = false;
+            });
+          });
+          fetch(`${server.baseURL}/services-categories/`).then(response =>{
+            response.json().then(data =>{
+              this.selectCategory = data;
+              this.LoadingCom = false;
+            });
+          });
+          this.load = false;
+        }
+      }).catch(error => {
+        this.load = false;
+        this.toast(
+            'b-toaster-top-center',
+            'danger',
+            'You not create new serves ' + error,
+        );
+      });
       this.newCategory = '';
       this.selectedCategory = '';
       this.desc = '';
@@ -182,39 +208,51 @@ export default {
 
     updateService(){
       this.load = true;
-      axios
-          .put(`${server.baseURL}/services-categories/`+this.selected, {
-            title: this.newCategory,
-            service: this.selected,
-            desc: this.desc
-          })
-          .then(
-              res => {
+      fetch(`${server.baseURL}/services-categories/`+this.selected, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: this.newCategory,
+          service: this.selectedCategory,
+          desc: this.desc
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          this.toast(
+              'b-toaster-top-center',
+              'success',
+              'You update new serves'
+          );
 
-                this.toast(
-                    'b-toaster-top-center',
-                    'success',
-                    'You update new serves'
-                );
+          fetch(`${server.baseURL}/services/`).then(response =>{
+            response.json().then(data =>{
+              this.selectService = data;
+              this.LoadingCom = false;
+            });
+          });
+          fetch(`${server.baseURL}/services-categories/`).then(response =>{
+            response.json().then(data =>{
+              this.selectCategory = data;
+              this.LoadingCom = false;
+            });
+          });
+          this.load = false;
+        }
+      }).catch(error => {
+        this.load = false;
+        this.toast(
+            'b-toaster-top-center',
+            'danger',
+            'You not create new serves ' + error,
+        );
+      });
 
-                axios.
-                get(`${server.baseURL}/services`)
-                    .then(res => {this.selectService = res.data});
-                axios.
-                get(`${server.baseURL}/services-categories`)
-                    .then(res => {this.selectCategory = res.data});
-                this.load = false;
-              }
-          )
-          .catch(error => {
-                this.load = false;
-                this.toast(
-                    'b-toaster-top-center',
-                    'danger',
-                    'You not update new serves'
-                );
-              }
-          )
       this.newCategory = '';
       this.selected = '';
       this.desc = '';
@@ -222,36 +260,54 @@ export default {
 
     deleteService(){
       this.load = true;
-      axios
-          .delete(`${server.baseURL}/services-categories/`+this.selected, {
-            title: this.newCategory
-          })
-          .then(
-              res => {
-                this.toast(
-                    'b-toaster-top-center',
-                    'success',
-                    'You delete new serves'
-                );
+      fetch(`${server.baseURL}/services-categories/`+this.selected, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: this.newCategory,
+          service: this.selectedCategory,
+          desc: this.desc
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          this.toast(
+              'b-toaster-top-center',
+              'success',
+              'You update new serves'
+          );
 
-                axios.
-                get(`${server.baseURL}/services`)
-                    .then(res => {this.selectService = res.data});
-                axios.
-                get(`${server.baseURL}/services-categories`)
-                    .then(res => {this.selectCategory = res.data});
-                this.load = false;
-              }
-          )
-          .catch(error => {
-                this.load = false;
-                this.toast(
-                    'b-toaster-top-center',
-                    'danger',
-                    'You not delete new serves'
-                );
-              }
-          )
+          fetch(`${server.baseURL}/services/`).then(response =>{
+            response.json().then(data =>{
+              this.selectService = data;
+              this.LoadingCom = false;
+            });
+          });
+          fetch(`${server.baseURL}/services-categories/`).then(response =>{
+            response.json().then(data =>{
+              this.selectCategory = data;
+              this.LoadingCom = false;
+            });
+          });
+          this.load = false;
+        }
+      }).catch(error => {
+        this.load = false;
+        this.toast(
+            'b-toaster-top-center',
+            'danger',
+            'You not create new serves ',
+            error,
+        );
+      });
+
+
+
       this.newCategory = '';
     },
 

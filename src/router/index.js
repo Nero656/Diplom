@@ -3,7 +3,6 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import adminPenal from '@/views/AdminPanel'
 import adminPanelInd from '@/views/admin-panal/index'
-import servesCreateForm from "@/views/admin-panal/serviceCreateForm";
 
 Vue.use(VueRouter)
 
