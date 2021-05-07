@@ -18,10 +18,8 @@
 </template>
 
 <script>
-import axios from "axios";
 import { server } from "@/Helper";
 import LoadingCom from "@/components/LoadingCom";
-
 export default {
   name: "Stack",
   components: {LoadingCom},
@@ -30,11 +28,15 @@ export default {
     stackArr: []
   }),
   mounted() {
-    axios
-    .get(`${server.baseURL}/stack`)
-    .then(res => {
-      this.stackArr = res.data;
-      this.LoadingCom = false
+    fetch(`${server.baseURL}/stack/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then( function( data ){
+          this.stackArr = data;
+          this.LoadingCom = false;
+        }.bind(this));
+      }
     })
   }
 }

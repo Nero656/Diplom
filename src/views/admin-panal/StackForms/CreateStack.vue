@@ -39,7 +39,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 
 export default {
@@ -66,37 +65,45 @@ name: "CreateStack",
       // fr.append("title", this.stack);
       // fr.append("photo_url", this.photo_url);
 
-      axios
-          .post(`${server.baseURL}/stack`,{
-            title:  this.stack,
-            photo_url: this.img
-          })
-          .then(res => {
-            axios
-                .get(`${server.baseURL}/stack`)
-                .then(res => {this.selectStack = res.data});
+      fetch(`${server.baseURL}/stack`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title:  this.stack,
+          photo_url: this.img
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          fetch(`${server.baseURL}/stack`).then(response =>{
+            response.json().then(data =>{
+              this.selectStack = data
+            });
+          });
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You create new stack'
+          );
+          this.load = false;
+          this.tagsSTR = '';
+        }
+      }).catch(error => {
+        this.toast(
+            'ERROR',
+            'b-toaster-top-center',
+            'danger',
+            error
+        );
+        this.load = false;
+      });
 
-            this.toast(
-                'Success',
-                'b-toaster-top-center',
-                'success',
-                'You create new serves'
-            );
-
-            this.stack = '';
-            this.img = '';
-            this.load = false;
-          })
-          .catch(error => {
-                this.toast(
-                    'ERROR',
-                    'b-toaster-top-center',
-                    'danger',
-                    error.response.data.message
-                );
-                this.load = false;
-              }
-          )
     },
     toast(title, toaster, variant, message) {
       this.counter++

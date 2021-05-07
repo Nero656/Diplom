@@ -1,18 +1,18 @@
 <template>
-  <form class="container text-left mt-5" >
+  <form class="container text-left mt-5">
     <div class="form-group">
       <label>Image URL</label>
       <b-input type="text" v-model="img" placeholder="URL"/>
     </div>
 
-<!--    <div class="form-group">-->
-<!--      <label>Image</label>-->
-<!--      <b-form-file-->
-<!--          placeholder="Choose a file or drop it here..."-->
-<!--          drop-placeholder="Drop file here..."-->
-<!--          @change="fileUpload"-->
-<!--      ></b-form-file>-->
-<!--    </div>-->
+    <!--    <div class="form-group">-->
+    <!--      <label>Image</label>-->
+    <!--      <b-form-file-->
+    <!--          placeholder="Choose a file or drop it here..."-->
+    <!--          drop-placeholder="Drop file here..."-->
+    <!--          @change="fileUpload"-->
+    <!--      ></b-form-file>-->
+    <!--    </div>-->
 
     <div class="form-group" v-show="img">
       <label>Preview</label>
@@ -32,7 +32,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 
 export default {
@@ -51,38 +50,52 @@ export default {
     //   this.picture_create = URL.createObjectURL(this.photo_url);
     // },
 
-    createPartner(){
+    createPartner() {
       this.load = true;
 
       // let fr = new FormData();
       //
       // fr.append("photo_url", this.photo_url);
 
-      axios
-          .post(`${server.baseURL}/partners`,{
-            photo_url: this.img
-          })
-          .then(res => {
-            this.toast(
-                'Success',
-                'b-toaster-top-center',
-                'success',
-                'You create new serves'
-            );
-            this.img = '';
-            this.load = false;
-          })
-          .catch(error => {
-                this.toast(
-                    'ERROR',
-                    'b-toaster-top-center',
-                    'danger',
-                    error.response.data.message
-                );
-                this.load = false;
-              }
-          )
+      fetch(`${server.baseURL}/partners`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          photo_url: this.img
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          fetch(`${server.baseURL}/partners`).then(response => {
+            response.json().then(data => {
+              this.selectStack = data
+            });
+          });
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You create new partner'
+          );
+          this.img = '';
+          this.load = false;
+        }
+      }).catch(error => {
+        this.toast(
+            'ERROR',
+            'b-toaster-top-center',
+            'danger',
+            error
+        );
+        this.load = false;
+      });
     },
+
 
     toast(title, toaster, variant, message) {
       this.counter++

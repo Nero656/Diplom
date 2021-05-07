@@ -19,9 +19,7 @@
     >
       <template #footer="{ hide }">
         <div class="d-flex align-items-center px-3 py-2">
-          <router-link to="/">
-            Return to site
-          </router-link>
+          <b-button variant="danger" @click="logout()">Return to site</b-button>
         </div>
       </template>
       <b-list-group style="text-align: left; border-radius:0">
@@ -54,6 +52,7 @@ import ProjectForm from "@/views/admin-panal/ProjectForm";
 import Stack from "@/views/Elments/Stack";
 import StackForm from "@/views/admin-panal/StackForm";
 import PartnersForm from "@/views/admin-panal/PartnersForm";
+import router from "@/router";
 export default {
 name: "index",
   components: {PartnersForm, StackForm, Stack, ProjectForm, Projects, ServiceCategoryForm, serviceCreateForm},
@@ -66,6 +65,12 @@ name: "index",
       { id: 5, icon: 'person-lines-fill', name: 'Partners', state: false },
     ]
   }),
+  mounted() {
+    if (this.$store.state.User.auth === false){
+      alert('Authorization error');
+      return router.push('/admin');
+    }
+  },
   methods: {
     checkedForm(id)
     {
@@ -75,6 +80,9 @@ name: "index",
         }
       }
       this.items[id].state = !this.items[id].state
+    },
+    logout(){
+      this.$store.dispatch('User/Logout');
     }
   }
 }

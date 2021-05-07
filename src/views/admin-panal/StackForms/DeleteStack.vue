@@ -33,7 +33,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 
 export default {
@@ -48,40 +47,48 @@ export default {
     load: false,
   }),
   mounted() {
-    axios.
-    get(`${server.baseURL}/stack`)
-        .then(res => {this.selectStack = res.data})
+    fetch(`${server.baseURL}/stack`).then(response =>{
+      response.json().then(data =>{
+        this.selectStack = data
+      });
+    });
   },
   methods:{
     deleteStack(){
       this.load = true;
-      axios
-          .delete(`${server.baseURL}/stack/`+this.selected)
-          .then(
-              res => {
-                axios
-                    .get(`${server.baseURL}/stack`)
-                    .then(res => {this.selectStack = res.data});
+      fetch(`${server.baseURL}/stack/`+this.selected, {
+        method: 'DELETE',
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          fetch(`${server.baseURL}/stack`).then(response =>{
+            response.json().then(data =>{
+              this.selectStack = data
+            });
+          });
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You update stack'
+          );
+          this.stack = '';
+          this.img = '';
+          this.load = false;
+        }
+      }).catch(error => {
+        this.toast(
+            'ERROR',
+            'b-toaster-top-center',
+            'danger',
+            error
+        );
+        this.load = false;
+      });
 
-                this.load = false;
-                this.toast(
-                    'Success',
-                    'b-toaster-top-center',
-                    'success',
-                    'You delete new serves'
-                );
-              }
-          )
-          .catch(error => {
-                this.load = false;
-                this.toast(
-                    'ERROR',
-                    'b-toaster-top-center',
-                    'danger',
-                    error.response.data.message
-                );
-              }
-          )
     },
 
     select(id){

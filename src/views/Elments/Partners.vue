@@ -12,7 +12,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 import LoadingCom from "@/components/LoadingCom";
 
@@ -24,12 +23,16 @@ export default {
     partnersArr: []
   }),
   mounted() {
-    axios
-        .get(`${server.baseURL}/partners`)
-        .then(res => {
-          this.partnersArr = res.data;
-          this.LoadingCom = false
-        })
+    fetch(`${server.baseURL}/partners/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then(data =>{
+          this.partnersArr = data;
+          this.LoadingCom = false;
+        });
+      }
+    });
   }
 }
 </script>

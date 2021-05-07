@@ -36,18 +36,19 @@ import router from "@/router";
 export default {
   name: "admin-panel",
   data: () => ({
-    login: '',
-    password: ''
+    user: {
+      login: '',
+      password: ''
+    }
   }),
   methods: {
     click() {
-      if (this.login.length > 0 || this.password.length > 0) {
-       this.makeToast()
+      if (this.login === 'admin' && this.password === 'admin') {
+        this.$store.dispatch('User/Auth');
       } else {
-        return router.push('/admin-panel');
+        this.makeToast()
       }
     },
-
     makeToast() {
       this.$bvToast.toast('Error, check if the data is correct ', {
         title: `Error`,

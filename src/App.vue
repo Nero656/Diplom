@@ -7,7 +7,6 @@
 </template>
 
 <style>
-
 #cont{
   margin-top: 2%;
   text-align: center;
@@ -25,5 +24,6 @@
   color: #454cd9;
 }
 </style>
+
 <script>
 </script>

@@ -82,7 +82,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 import Product from "@/components/Product";
 
@@ -129,39 +128,49 @@ name: "CreateProject",
       // console.log(fr, fr.get('photo_url'))
       // {
 
-      axios
-          .post(`${server.baseURL}/projects`,  {
-            title: this.newProject,
-            photo_url: this.photo_url,
-            tags: this.tagsSTR,
-            width: this.width,
-            desc: this.desc,
-            color: this.color
-          })
-          .then(res => {
-            axios.get(`${server.baseURL}/projects`)
-                .then(res => {
-                  this.selectService = res.data
-                })
-            this.toast(
-                'Success',
-                'b-toaster-top-center',
-                'success',
-                'You create new project'
-            );
-            this.load = false;
-            this.tagsSTR = '';
-          })
-          .catch(error => {
-            this.load = false;
-            this.toast(
-                'ERROR',
-                'b-toaster-top-center',
-                'danger',
-                error.response.data.message
-            );
-            this.tagsSTR = '';
-          })
+      fetch(`${server.baseURL}/projects`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: this.newProject,
+          photo_url: this.photo_url,
+          tags: this.tagsSTR,
+          width: this.width,
+          desc: this.desc,
+          color: this.color
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          fetch(`${server.baseURL}/projects`).then(response =>{
+              response.json().then(data =>{
+                this.selectService = response.data
+              });
+          });
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You create new project'
+          );
+          this.load = false;
+          this.tagsSTR = '';
+        }
+      }).catch(error => {
+        this.load = false;
+        this.toast(
+            'ERROR',
+            'b-toaster-top-center',
+            'danger',
+            error
+        );
+        this.tagsSTR = '';
+      });
     },
     toast(title, toaster, variant, message) {
       this.counter++

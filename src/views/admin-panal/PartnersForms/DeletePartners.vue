@@ -45,41 +45,46 @@ export default {
 
   }),
   mounted() {
-    axios.get(`${server.baseURL}/partners`)
-        .then(res => {
-          this.selectPartners = res.data
-        })
+    fetch(`${server.baseURL}/partners`).then(response => {
+      response.json().then(data => {
+        this.selectPartners = data
+      });
+    });
   },
   methods: {
     deleteStack() {
       this.load = true;
-      axios
-          .delete(`${server.baseURL}/partners/` + this.selected)
-          .then(
-              res => {
-                axios.get(`${server.baseURL}/partners`)
-                    .then(res => {
-                      this.selectPartners = res.data
-                    })
-                this.toast(
-                    'Success',
-                    'b-toaster-top-center',
-                    'success',
-                    'You delete partners'
-                );
-                this.load = false;
-              }
-          )
-          .catch(error => {
-                this.load = false;
-                this.toast(
-                    'ERROR',
-                    'b-toaster-top-center',
-                    'danger',
-                    'You not delete partners'
-                );
-              }
-          )
+      fetch(`${server.baseURL}/partners/`+this.selected, {
+        method: 'DELETE',
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You update partner'
+          );
+          this.preview = '';
+          this.load = false;
+        }
+        fetch(`${server.baseURL}/partners`).then(response => {
+          response.json().then(data => {
+            this.selectStack = data
+          });
+        });
+      }).catch(error => {
+        this.toast(
+            'ERROR',
+            'b-toaster-top-center',
+            'danger',
+            error
+        );
+        this.load = false;
+      });
     },
 
     select(id) {

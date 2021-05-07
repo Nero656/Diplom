@@ -69,10 +69,11 @@ export default {
     load: false,
   }),
   mounted() {
-    axios.get(`${server.baseURL}/stack`)
-        .then(res => {
-          this.selectStack = res.data
-        })
+    fetch(`${server.baseURL}/stack`).then(response =>{
+      response.json().then(data =>{
+        this.selectStack = data
+      });
+    });
   },
   methods: {
     // fileUpload(event) {
@@ -88,39 +89,47 @@ export default {
       // fr.append("title", this.stack);
       // fr.append("photo_url", this.photo_url);
 
-      axios
-          .put(`${server.baseURL}/Stack/` + this.selected, {
-            title: this.preview[0].title,
-            photo_url: this.preview[0].img
-          })
-          .then(
-              res => {
-                axios
-                    .get(`${server.baseURL}/stack`)
-                    .then(res => {
-                      this.selectStack = res.data
-                    });
-                this.toast(
-                    'Success',
-                    'b-toaster-top-center',
-                    'success',
-                    'You update stack'
-                );
-                this.stack = '';
-                this.img = '';
-                this.load = false;
-              }
-          )
-          .catch(error => {
-                this.toast(
-                    'ERROR',
-                    'b-toaster-top-center',
-                    'danger',
-                    error.response.data
-                );
-                this.load = false;
-              }
-          )
+
+      fetch(`${server.baseURL}/stack/`+this.selected, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: this.preview[0].title,
+          photo_url: this.preview[0].img
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          fetch(`${server.baseURL}/stack`).then(response =>{
+            response.json().then(data =>{
+              this.selectStack = data
+            });
+          });
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You update stack'
+          );
+          this.stack = '';
+          this.img = '';
+          this.load = false;
+        }
+      }).catch(error => {
+        this.toast(
+            'ERROR',
+            'b-toaster-top-center',
+            'danger',
+            error
+        );
+        this.load = false;
+      });
+
     },
 
     select(id) {

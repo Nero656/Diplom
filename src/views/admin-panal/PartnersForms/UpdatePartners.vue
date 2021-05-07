@@ -48,7 +48,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 
 export default {
@@ -65,9 +64,11 @@ export default {
     ]
   }),
   mounted() {
-    axios.
-    get(`${server.baseURL}/partners`)
-        .then(res => {this.selectPartners = res.data})
+    fetch(`${server.baseURL}/partners`).then(response => {
+      response.json().then(data => {
+        this.selectPartners = data
+      });
+    });
   },
   methods:{
     // fileUpload(event) {
@@ -82,36 +83,43 @@ export default {
       //
       // fr.append("photo_url", this.photo_url);
 
-      axios
-          .put(`${server.baseURL}/partners/`+this.selected,{
-            photo_url: this.preview
-          } )
-          .then(
-              res => {
-                axios.
-                get(`${server.baseURL}/partners`)
-                    .then(res => {this.selectPartners = res.data})
-                this.toast(
-                    'Success',
-                    'b-toaster-top-center',
-                    'success',
-                    'You update new serves'
-                );
-                this.selectPartner = this.preview;
-                this.preview = '';
-                this.load = false;
-              }
-          )
-          .catch(error => {
-                this.toast(
-                    'ERROR',
-                    'b-toaster-top-center',
-                    'danger',
-                    error.response.data
-                );
-                this.load = false;
-              }
-          )
+      fetch(`${server.baseURL}/partners/`+this.selected, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          photo_url: this.preview
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You update partner'
+          );
+          this.preview = '';
+          this.load = false;
+        }
+        fetch(`${server.baseURL}/partners`).then(response => {
+          response.json().then(data => {
+            this.selectStack = data
+          });
+        });
+      }).catch(error => {
+        this.toast(
+            'ERROR',
+            'b-toaster-top-center',
+            'danger',
+            error
+        );
+        this.load = false;
+      });
     },
 
     select(id){

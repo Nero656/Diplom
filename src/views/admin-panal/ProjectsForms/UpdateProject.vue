@@ -96,7 +96,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 import Product from "@/components/Product";
 
@@ -122,10 +121,16 @@ export default {
     ],
   }),
   mounted() {
-    axios.get(`${server.baseURL}/projects`)
-        .then(res => {
-          this.selectService = res.data
-        })
+    fetch(`${server.baseURL}/projects/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then(data =>{
+          this.selectService = data;
+          this.LoadingCom = false;
+        });
+      }
+    });
   },
   methods: {
 
@@ -152,42 +157,51 @@ export default {
       // fr.append("desc", this.preview[0].desc);
       // fr.append("color", this.preview[0].color);
 
+      fetch(`${server.baseURL}/projects/` + this.selected, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: this.preview[0].title,
+          photo_url: this.preview[0].photo_url,
+          tags: this.tagsSTR,
+          width: this.preview[0].width,
+          desc: this.preview[0].desc,
+          color: this.preview[0].color
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
 
-      axios
-          .put(`${server.baseURL}/projects/` + this.selected, {
-                title: this.preview[0].title,
-                photo_url: this.preview[0].photo_url,
-                tags: this.tagsSTR,
-                width: this.preview[0].width,
-                desc: this.preview[0].desc,
-                color: this.preview[0].color
-              })
-          .then(res => {
-            axios.get(`${server.baseURL}/projects`)
-                .then(res => {
-                  this.selectService = res.data
-                })
-            this.toast(
-                'Success',
-                'b-toaster-top-center',
-                'success',
-                'You create new project'
-            );
-            this.load = false;
-          }, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-          .catch(error => {
+          fetch(`${server.baseURL}/projects`).then(response =>{
+            response.json().then(data =>{
+              this.selectService = data;
+              this.LoadingCom = false;
+            });
+          });
+
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You create new project'
+          );
+          this.load = false;
+          this.tagsSTR = '';
+        }
+      }).catch(error => {
             this.load = false;
             this.toast(
                 'ERROR',
                 'b-toaster-top-center',
                 'danger',
-                error.response.data.message
-            );
-          })
+                error
+            )
+      });
       this.tagsSTR = ''
     },
 

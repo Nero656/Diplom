@@ -59,5 +59,4 @@ export default {
   .team{
     text-align: left;
   }
-
 </style>

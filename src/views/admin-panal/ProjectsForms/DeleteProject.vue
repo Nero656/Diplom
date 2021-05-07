@@ -36,7 +36,6 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from "@/Helper";
 import Product from "@/components/Product";
 
@@ -62,43 +61,67 @@ export default {
     ]
   }),
   mounted() {
-    axios.get(`${server.baseURL}/projects`)
-        .then(res => {
-          this.selectService = res.data
-        })
+    fetch(`${server.baseURL}/projects/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then(data =>{
+          this.selectService = data;
+          this.LoadingCom = false;
+        });
+      }
+    });
   },
   methods:{
     deleteProject() {
       this.load = true;
-      axios
-          .delete(`${server.baseURL}/projects/` + this.selected)
-          .then(
-              res => {
-                axios.get(`${server.baseURL}/projects`)
-                    .then(res => {
-                      this.selectService = res.data
-                    })
 
-                this.toast(
-                    'Success',
-                    'b-toaster-top-center',
-                    'success',
-                    'You delete new project'
-                );
-                this.load = false;
-              }
-          )
-          .catch(error => {
-                this.load = false;
-                this.toast(
-                    'ERROR',
-                    'b-toaster-top-center',
-                    'danger',
-                    error.response.data
-                );
-              }
-          )
-      this.newCategory = '';
+    fetch(`${server.baseURL}/projects/` + this.selected, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: this.preview[0].title,
+          photo_url: this.preview[0].photo_url,
+          tags: this.tagsSTR,
+          width: this.preview[0].width,
+          desc: this.preview[0].desc,
+          color: this.preview[0].color
+        })
+      }).then(async response => {
+        const data = await response.json();
+        if (!response.ok) {
+          const error = (data && data.message) || response.status;
+          return Promise.reject(error);
+        } else {
+
+          fetch(`${server.baseURL}/projects`).then(response =>{
+            response.json().then(data =>{
+              this.selectService = data;
+              this.LoadingCom = false;
+            });
+          });
+
+          this.toast(
+              'Success',
+              'b-toaster-top-center',
+              'success',
+              'You create new project'
+          );
+          this.load = false;
+          this.tagsSTR = '';
+        }
+      }).catch(error => {
+            this.load = false;
+            this.toast(
+                'ERROR',
+                'b-toaster-top-center',
+                'danger',
+                error
+            )
+      });
+      this.tagsSTR = ''
     },
 
     select(id) {
