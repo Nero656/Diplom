@@ -19,21 +19,12 @@
       <b-input type="text" v-model="preview[0].title" placeholder="Title"/>
     </div>
 
-    <!--    <div class="form-group">-->
-    <!--      <label>Image</label>-->
-    <!--      <b-form-file-->
-    <!--          placeholder="Choose a file or drop it here..."-->
-    <!--          drop-placeholder="Drop file here..."-->
-    <!--          @change="fileUploadUpdate"-->
-    <!--      ></b-form-file>-->
-    <!--    </div>-->
 
     <div class="form-group">
       <label>Image URL</label>
       <b-input type="text" placeholder="URL"/>
     </div>
 
-    <!--            @change="fileUpload" -->
     <div class="form-group">
       <label for="tags-separators">Tags</label>
       <b-form-tags
@@ -134,11 +125,6 @@ export default {
   },
   methods: {
 
-    // fileUploadUpdate(event) {
-    //   this.photo_url[0] = event.target.files[0];
-    //   this.picture_create = URL.createObjectURL(this.photo_url);
-    // },
-
     updateProject() {
       this.load = true;
       for (let i = 0; i < this.preview[0].tags.length; i++) {
@@ -148,14 +134,6 @@ export default {
         }
       }
 
-      // let fr = new FormData();
-      //
-      // fr.append("title", this.preview[0].newProject);
-      // fr.append("photo_url", this.preview[0].photo_url);
-      // fr.append("tags", this.preview[0].tagsSTR);
-      // fr.append("width", this.preview[0].width);
-      // fr.append("desc", this.preview[0].desc);
-      // fr.append("color", this.preview[0].color);
 
       fetch(`${server.baseURL}/projects/` + this.selected, {
         method: 'PUT',

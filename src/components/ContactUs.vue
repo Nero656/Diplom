@@ -115,9 +115,7 @@
 </template>
 
 <script>
-import axios from "axios";
 import {server} from '@/Helper'
-
 export default {
   name: "ContactUs",
   data: () => ({
@@ -144,11 +142,16 @@ export default {
     }
   },
   mounted() {
-    axios
-        .get(`${server.baseURL}/services/`)
-        .then(res => {
-          this.serviceArr = res.data
-        })
+    fetch(`${server.baseURL}/services/`).then(response =>{
+      if(response.status !== 200){
+        console.log(response.status);
+      }else{
+        response.json().then(data =>{
+          this.serviceArr = data;
+          this.LoadingCom = false;
+        });
+      }
+    });
   },
   methods: {
     hideModal() {

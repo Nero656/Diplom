@@ -1,5 +1,4 @@
 import router from "@/router";
-
 const state = {
     auth: false,
 }
@@ -22,7 +21,6 @@ const actions = {
         return  router.push('/')
     }
 }
-
 export default {
     namespaced: true,
     state,
